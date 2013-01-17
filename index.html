@@ -404,25 +404,17 @@
   }
 
   /*
-   * Escape javascript for storage in Bookmarklet
-   */
-  function esc_js(v){ "use strict";
-    return v.replace(/\\/g,'\\\\')
-            .replace(/\"/g,'\\x22')
-            .replace(/\'/g,'\\x27')
-            .replace(/\n/g,'\\n');
-  }
-
-  /*
    * Collect bookmarklets from input fields into an array of objects
    */
   function getBookmarkletsFromInputs()
-  {
+  { "use strict";
     var bookmarkletEntryTable = d('bookmarkletEntry')
       , bookmarkletInputs = bookmarkletEntryTable.getElementsByTagName('input')
       , bookmarklets = []
       , titles = []
       , urls = []
+      , title
+      , url
     ;
     /* Collect Titles and URLs from bookmarklet Entry fields */
     for(var i = 0; i < bookmarkletInputs.length; i++)
@@ -695,14 +687,15 @@
     }
     var combinedJSON = d('settingsTextarea').value.toString().trim()
       , settings
-      , bookmarklets;
+      , bookmarklets
+      , combined;
     if(!combinedJSON) {
       return false;
     }
     try {
-      var combined = JSON.parse(combinedJSON);
+      combined = JSON.parse(combinedJSON);
     } catch(err) {
-      alert("Invalid settings format! JSON.parse() failed.");
+      window.alert("Invalid settings format! JSON.parse() failed.");
       return false;
     }
     settings = combined.settings;
@@ -803,7 +796,7 @@
       = '';
       /* Add the current page settings (see serializeSettings()) */
       exports.settings = serializeSettings();
-      console.log(exports);
+      // console.log(exports);
       /* insert into the settings textarea */
         settingsTextarea.innerHTML
       = settingsTextarea.innerText
