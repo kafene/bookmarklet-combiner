@@ -1,12 +1,11 @@
 <!doctype html>
-<!-- GITHUB PAGES - LAST UPDATED 2013 - 01 -17 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <!--
   * Kafene Bookmarklet Combiner
   * Copyright 2012 kafene.org <http://kafene.org>
-  * @todo - github link
+  * @link <https://github.com/kafene/BookmarkletCombiner>
   *
   * COPYRIGHT (c) 2013 kafene.org <http://kafene.org/COPYING>
   * You may do anything with this work that any copyright law would normally
@@ -18,7 +17,6 @@
     * http://w-shadow.com/bookmarklet-combiner/
     * http://w-shadow.com/blog/2010/06/02/bookmarklet-combiner/
   *
-  * @todo - use json for serializing bookmarklets, not custom format.
 -->
 <meta name="robots" content="noindex,nofollow">
 <title>Kafene Bookmarklet Combiner</title>
@@ -397,18 +395,11 @@
   /*jshint laxbreak:true, laxcomma:true */
 
   /*
-   * Shortcut func to get elementById from document or node
-   */
-  function d(el, fromNode) { "use strict";
-    return (fromNode || document).getElementById(el);
-  }
-
-  /*
    * Collect bookmarklets from input fields into an array of objects
    */
   function getBookmarkletsFromInputs()
   { "use strict";
-    var bookmarkletEntryTable = d('bookmarkletEntry')
+    var bookmarkletEntryTable = document.getElementById('bookmarkletEntry')
       , bookmarkletInputs = bookmarkletEntryTable.getElementsByTagName('input')
       , bookmarklets = []
       , titles = []
@@ -471,7 +462,7 @@
     /*jshint scripturl:true */
     // console.log('generateBookmarklet() called.');
     var bookmarkletLink = '#'
-      , clickActionSetting = d('run').checked ? 'run' : 'menu'
+      , clickActionSetting = document.getElementById('run').checked ? 'run' : 'menu'
     ;
     var bookmarklets = getBookmarkletsFromInputs();
     /* Remove any showing bookmarklet menus  */
@@ -486,9 +477,9 @@
     {
       bookmarklets =
       [ JSON.stringify(bookmarklets)
-      , '"' + d('position').value + '"'
-      , d('closeOnClickingLink').checked
-      , d('closeOnClickingOutside').checked
+      , '"' + document.getElementById('position').value + '"'
+      , document.getElementById('closeOnClickingLink').checked
+      , document.getElementById('closeOnClickingOutside').checked
       , (new Date()).getTime()
       ];
       /* @todo - could use Function.prototype.toString() here? */
@@ -601,15 +592,15 @@
       + '})('+JSON.stringify(bookmarklets)+')';
     }
     /* Set result link to the generated bookmarklet */
-    d('combinedBookmarkletLink').href = encodeURI(bookmarkletLink);
+    document.getElementById('combinedBookmarkletLink').href = encodeURI(bookmarkletLink);
   }
 
   /* Toggle showing info when an info link is clicked */
   function showInfo(x)
   { "use strict";
     try {
-      var infoItem = d('info-' + x)
-        , infoContainer = d('info')
+      var infoItem = document.getElementById('info-' + x)
+        , infoContainer = document.getElementById('info')
       ;
       var infoChildren = infoContainer.children;
       if(infoChildren.length) {
@@ -653,9 +644,11 @@
   /* Update the bookmarklet's title. */
   function updateTitle()
   { "use strict";
-    // console.log('updateTitle() called.');
-    d('bookmarkletTitle').innerText = d('combinedBookmarkletLink').title = d('bookmarkletName').value
-      ? d('bookmarkletName').value
+    /* console.log('updateTitle() called.'); */
+    document.getElementById('bookmarkletTitle').innerText
+    = document.getElementById('combinedBookmarkletLink').title
+    =   document.getElementById('bookmarkletName').value
+      ? document.getElementById('bookmarkletName').value
       : 'Combined Bookmarklet';
   }
 
@@ -666,13 +659,13 @@
       ev.preventDefault();
     }
     var rta = document.getElementsByName('rowsToAdd')[0]
-      , tpl = d('bookmarkletEntryTemplate');
+      , tpl = document.getElementById('bookmarkletEntryTemplate');
     if(rta.value && !howMany) {
       howMany = rta.value; 
     }
     tpl = tpl.getElementsByClassName('bookmarklet')[0];
     for(var i = 0; i < howMany; i++) {
-      d('bookmarkletEntry').appendChild(tpl.cloneNode(true));
+      document.getElementById('bookmarkletEntry').appendChild(tpl.cloneNode(true));
     }
   }
 
@@ -685,7 +678,7 @@
     if(ev && ev.preventDefault) {
       ev.preventDefault();
     }
-    var combinedJSON = d('settingsTextarea').value.toString().trim()
+    var combinedJSON = document.getElementById('settingsTextarea').value.toString().trim()
       , settings
       , bookmarklets
       , combined;
@@ -702,31 +695,31 @@
     bookmarklets = combined.bookmarklets;
     /* Restore setting for run vs show menu */
     if(settings.onclick === 'run') {
-      d('run').checked = true;
+      document.getElementById('run').checked = true;
     } else {
-      d('menu').checked = true;
+      document.getElementById('menu').checked = true;
     }
     /* Restore setting for Menu position (position element id = saved position) */
     try {
-      d(settings.position).selected = true;
+      document.getElementById(settings.position).selected = true;
     } catch(err) {}
     /* Restore setting for closing on clicking an item */
     try {
-      d('closeOnClickingLink').checked = settings.closeOnClickingLink;
+      document.getElementById('closeOnClickingLink').checked = settings.closeOnClickingLink;
     } catch(err) {}
     /* Restore setting for closing an item when clicking outside menu */
     try {
-      d('closeOnClickingOutside').checked = settings.closeOnClickingOutside;
+      document.getElementById('closeOnClickingOutside').checked = settings.closeOnClickingOutside;
     } catch(err) {}
     /* Restore name */
-    d('bookmarkletName').value = settings.name || '';
+    document.getElementById('bookmarkletName').value = settings.name || '';
     /*
      * Make #bookmarkletEntry empty, add empty rows.
      * Number of rows to add = number of lines in settings.
      */
-    d('bookmarkletEntry').innerHTML = '';
+    document.getElementById('bookmarkletEntry').innerHTML = '';
     addRow(null, bookmarklets.length);
-    var bookmarkletEntryTable = d('bookmarkletEntry');
+    var bookmarkletEntryTable = document.getElementById('bookmarkletEntry');
     var entryUrls = bookmarkletEntryTable.getElementsByClassName('url')
       , entryTitles = bookmarkletEntryTable.getElementsByClassName('title')
     ;
@@ -755,12 +748,12 @@
       ev.preventDefault();
     }
     var exports = {}
-      , bookmarkletEntryTable = d('bookmarkletEntry')
+      , bookmarkletEntryTable = document.getElementById('bookmarkletEntry')
       , title
       , url
       , j = 0
-      , settingsTextarea = d('settingsTextarea')
-      , exportButton = d('exportSettingsButton')
+      , settingsTextarea = document.getElementById('settingsTextarea')
+      , exportButton = document.getElementById('exportSettingsButton')
       , urls = bookmarkletEntryTable.getElementsByClassName('url')
       , titles = bookmarkletEntryTable.getElementsByClassName('title')
     ;
@@ -818,8 +811,9 @@
     if(ev && ev.preventDefault) {
       ev.preventDefault();
     }
-    var saveButton = d('saveSettingsButton')
-      , val = d('settingsTextarea').innerText || d('settingsTextarea').innerHTML
+    var saveButton = document.getElementById('saveSettingsButton')
+      , val = document.getElementById('settingsTextarea').innerText
+           || document.getElementById('settingsTextarea').innerHTML
     ;
     /*
      * Flash a "settings saved" message in the save button
@@ -852,20 +846,20 @@
     // console.log('serializeSettings() called.');
     var settings = {}
       , pos = 'position';
-    if(d('menu').checked) {
+    if(document.getElementById('menu').checked) {
       settings.onclick = "menu";
-      settings.position = d(pos).value;
+      settings.position = document.getElementById(pos).value;
     } else {
       settings.onclick = "run";
     }
     try {
-      settings.closeOnClickingLink = d('closeOnClickingLink').checked;
+      settings.closeOnClickingLink = document.getElementById('closeOnClickingLink').checked;
     } catch(err) {}
     try {
-      settings.closeOnClickingOutside = d('closeOnClickingOutside').checked;
+      settings.closeOnClickingOutside = document.getElementById('closeOnClickingOutside').checked;
     } catch(err) {}
-    if(!!d('bookmarkletName').value) {
-      settings.name = d('bookmarkletName').value;
+    if(!!document.getElementById('bookmarkletName').value) {
+      settings.name = document.getElementById('bookmarkletName').value;
     }
     return settings;
   }
@@ -879,7 +873,7 @@
     if(ev && ev.preventDefault) {
       ev.preventDefault();
     }
-    var settings = d('settingsTextarea');
+    var settings = document.getElementById('settingsTextarea');
     /* Confirm dialog if the settings textarea is not empty */
     if(settings.innerText.trim() === '' || window.confirm('OK?')) {
       localStorage.removeItem('kafeneBookmarkletCombinerSettings');
@@ -909,7 +903,7 @@
    */
   function deactivateRows()
   { "use strict";
-    var bookmarkletEntryTable = d('bookmarkletEntry');
+    var bookmarkletEntryTable = document.getElementById('bookmarkletEntry');
     var rows = bookmarkletEntryTable.getElementsByTagName('tr');
     if(rows.length) {
       for(var i = 0; i < rows.length; i++) {
@@ -976,82 +970,82 @@
   window.addEventListener('load', function()
   { "use strict";
     /* */
-    d('position').addEventListener('change', function(){
+    document.getElementById('position').addEventListener('change', function(){
       generateBookmarklet();
     });
     /* If menu position is changed, make sure the "show menu" setting is selected */
     /* @todo - should this event be "select" instead? */
-    d('position').addEventListener('click', function(){
-      d('menu').checked = true;
+    document.getElementById('position').addEventListener('click', function(){
+      document.getElementById('menu').checked = true;
     });
     /* */
-    d('run').addEventListener('change', function(){
+    document.getElementById('run').addEventListener('change', function(){
       generateBookmarklet();
     });
     /* */
-    d('menu').addEventListener('change', function(){
+    document.getElementById('menu').addEventListener('change', function(){
       generateBookmarklet();
     });
     /* */
-    d('closeOnClickingLink').addEventListener('change', function(){
+    document.getElementById('closeOnClickingLink').addEventListener('change', function(){
       generateBookmarklet();
     });
     /* */
-    d('closeOnClickingOutside').addEventListener('change', function(){
+    document.getElementById('closeOnClickingOutside').addEventListener('change', function(){
       generateBookmarklet();
     });
     /* Update the title of the bookmarklet when name is changed */
-    d('bookmarkletName').addEventListener('change', function(){
+    document.getElementById('bookmarkletName').addEventListener('change', function(){
       updateTitle();
     });
     /* For some reason pressing enter here was moving rows up/down */
-    d('bookmarkletName').addEventListener('keyDown', function(ev){
+    document.getElementById('bookmarkletName').addEventListener('keyDown', function(ev){
       if(ev && ev.keyCode === 13 && ev.preventDefault) {
         ev.preventDefault();
       }
     });
     /* Same as Above */
-    d('position').addEventListener('keyDown', function(ev){
+    document.getElementById('position').addEventListener('keyDown', function(ev){
       if(ev && ev.keyCode === 13 && ev.preventDefault) {
         ev.preventDefault();
       }
     });
     /* Same as Above */
-    d('rowsToAdd').addEventListener('keyDown', function(ev){
+    document.getElementById('rowsToAdd').addEventListener('keyDown', function(ev){
       if(ev && ev.keyCode === 13 && ev.preventDefault) {
         ev.preventDefault();
       }
     });
     /* Add an input row when the add button is clicked */
-    d('addSomeRows').addEventListener('click', function(ev){
+    document.getElementById('addSomeRows').addEventListener('click', function(ev){
       addRow(ev);
     });
     /* */
-    d('exportSettingsButton').addEventListener('click', function(ev){
+    document.getElementById('exportSettingsButton').addEventListener('click', function(ev){
       exportSettings(ev);
     });
     /* */
-    d('restoreSettingsButton').addEventListener('click', function(ev){
+    document.getElementById('restoreSettingsButton').addEventListener('click', function(ev){
       restoreSettings(ev);
     });
     /* */
-    d('saveSettingsButton').addEventListener('click', function(ev){
+    document.getElementById('saveSettingsButton').addEventListener('click', function(ev){
       saveSettings(ev);
     });
     /* */
-    d('removeLocalSettingsButton').addEventListener('click', function(ev){
+    document.getElementById('removeLocalSettingsButton').addEventListener('click', function(ev){
       removeLocalSettings(ev);
     });
     /* */
-    d('restoreSettingsInfoLink').addEventListener('click', function(){
+    document.getElementById('restoreSettingsInfoLink').addEventListener('click', function(){
       showInfo('restoreSettings');
     });
     /* */
-    d('saveSettingsInfoLink').addEventListener('click', function(){
+    document.getElementById('saveSettingsInfoLink').addEventListener('click', function(){
       showInfo('saveSettings');
     });
     /* */
-    d('exportSettingsInfoLink').addEventListener('click', function(){
+    document.getElementById('exportSettingsInfoLink').addEventListener('click', function(){
       showInfo('exportSettings');
     });
     /* This is a dummy I put in to make jshint happy. */
@@ -1064,7 +1058,7 @@
      * Below is Initial setup performed once on load
      */
     /* Only show the save buttons to browsers that support localStorage */
-    d('localStorageOnly').style.display = window.localStorage
+    document.getElementById('localStorageOnly').style.display = window.localStorage
       ? 'inline'
       : 'none';
     /* When clicking on a close button (used in info area), hide info area */
@@ -1079,7 +1073,7 @@
       closeButtons[cbI].onclick = closeInfoBox;
     }
     /* Base64-encoded Bookmark Icon Image (shown in bookmarklet link) */
-    d('bookmarkIconImage').src =
+    document.getElementById('bookmarkIconImage').src =
        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAQMAA'
       + 'ADaua+7AAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP/AOW3MEoAAABRSURBVHjaFcmxCcAgFE'
       + 'XRKxaWjuAorpQyReA7mqMILmBpEXz5KQ487mNLLBOjil5Ey4Lkou/gDf8wFpVN4SVzSF4jswV'
@@ -1090,7 +1084,7 @@
      * Gets any settings settings from browser's localStorage
      * and fill them in to the settings textarea
      */
-    var settings = d('settingsTextarea')
+    var settings = document.getElementById('settingsTextarea')
       , localSettings = localStorage.getItem('kafeneBookmarkletCombinerSettings');
     if(localSettings !== null) {
         settings.innerHTML
