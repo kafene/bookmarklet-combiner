@@ -3,98 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <!--
-  * Kafene Bookmarklet Combiner
-  * Copyright 2012 kafene.org <http://kafene.org>
-  * @link <https://github.com/kafene/BookmarkletCombiner>
-  *
-  * COPYRIGHT (c) 2013 kafene.org <http://kafene.org/COPYING>
-  * You may do anything with this work that any copyright law would normally
-  * restrict, so long as you retain the above notice in all redistributed copies
-  * and/or derived works. The works are provided `as-is` with no form of warranty.
-  *
-  * This program is a rewrite of, and inspired by
-  * W-Shadow Bookmarklet Combiner:
-    * http://w-shadow.com/bookmarklet-combiner/
-    * http://w-shadow.com/blog/2010/06/02/bookmarklet-combiner/
-  *
+* Kafene Bookmarklet Combiner
+* @copyright Copyright 2012 kafene.org <http://kafene.org>
+* @link <https://github.com/kafene/BookmarkletCombiner>
+*
+* COPYRIGHT (c) 2013 kafene.org <http://kafene.org/COPYING>
+* You may do anything with this work that any copyright law would normally
+* restrict, so long as you retain the above notice in all redistributed copies
+* and/or derived works. The works are provided `as-is` with no form of warranty.
+*
+* This program is a rewrite of, and inspired by
+* W-Shadow Bookmarklet Combiner:
+  * http://w-shadow.com/bookmarklet-combiner/
+  * http://w-shadow.com/blog/2010/06/02/bookmarklet-combiner/
+*
+* You can use it online: http://kafene.github.com/BookmarkletCombiner/
+*
+* **Features:**
+* Use your browsers localStorage to save bookmarklets.
+* Keep a JSON backup of the saved bookmarklets which can be restored later.
+* Entirely self-contained, works offline, from your local computer.
+* Possible to change bookmarklet menu style, position, etc, to suit your tastes.
+* Note: doing this requires editing of the file. Currently no menu CSS is saved,
+  but it is possible a future version will have this feature.
+* Checked with JSHint.
+* Works in Opera!
+*
+* **Requirements:**
+* A browser that supports `JSON.parse()` and `JSON.stringify()`
+*
+* *There are probably still some bugs* - I wrote this a long time ago to use
+* personally. I haven't noticed any severe bugs, but I did some code cleanup
+* before putting it onto GitHub. Hopefully everything works fine but if not
+* then please submit an issue.
 -->
 <meta name="robots" content="noindex,nofollow">
 <title>Kafene Bookmarklet Combiner</title>
 <style>
-  * {
+* {
     box-sizing:border-box !important;
-  }
-  html {
+}
+html {
     overflow-y:scroll;
     font:12px/180% "Segoe UI", "Droid Sans", sans-serif;
     padding:0;
     margin:0;
-  }
-  body {
+}
+body {
     background:#f9f9f9;
     padding:0;
     margin:0 auto;
     width:800px;
-  }
-  header {
+}
+header {
     font-weight:bold;
     margin:0.5em 0;
-  }
-  .info header {
+}
+.info header {
     margin:0;
-  }
-  img {
+}
+img {
     border:0;
     vertical-align:top;
-  }
-  h1 {
+}
+h1 {
     font-size:1.6em;
     margin:0.5em 0;
     text-align:center;
-  }
-  form {
+}
+form {
     border:1px solid #ccc;
     font-size:1.25em;
     display:block;
     padding:1em;
     background:#fff;
-  }
-  form > section {
+}
+form > section {
     margin:0.5em 0;
-  }
-  label {
+}
+label {
     margin-left:2px;
     cursor:pointer;
     display:block;
-  }
-  button {
+}
+button {
     display:inline-block;
     line-height:1.25em;
     margin:0;
-  }
-  input[type="checkbox"], input[type="radio"] {
+}
+input[type="checkbox"], input[type="radio"] {
     margin-right:0.5em;
-  }
-  section {
+}
+section {
     clear:both;
     padding:0.5em;
     border-top:1px dotted #999;
-  }
-  section:first-of-type {
+}
+section:first-of-type {
     padding-top:0;
     border-top:0;
-  }
+}
 
-  a {
+a {
     text-decoration:none;
     color:#11a;
     cursor:pointer;
-  }
-  a:hover {
+}
+a:hover {
     text-decoration:underline;
-  }
+}
 
-  a#combinedBookmarkletLink {
+a#combinedBookmarkletLink {
     border:1px solid #ccc;
     background:#eee;
     font-weight:800;
@@ -102,47 +121,47 @@
     border-radius:0.5em;
     color:#000;
     cursor:move;
-  }
-  a#combinedBookmarkletLink:hover {
+}
+a#combinedBookmarkletLink:hover {
     background:#e6e6e6;
     text-decoration:none;
-  }
+}
 
-  .settingsColumn {
+.settingsColumn {
     display:inline-block;
     text-align:left;
     vertical-align:top;
-  }
-  .settingsColumn:first-of-type {
+}
+.settingsColumn:first-of-type {
     width:37%;
-  }
-  .settingsColumn:last-of-type {
+}
+.settingsColumn:last-of-type {
     width:30%;
     float:right;
-  }
-  /* Targeting the label for "Show a menu at the"... */
-  .settingsColumn:first-of-type label:last-of-type {
+}
+/* Targeting the label for "Show a menu at the"... */
+.settingsColumn:first-of-type label:last-of-type {
     display:inline-block;
-  }
-  #settingsButtons {
+}
+#settingsButtons {
     margin-top:0.25em;
-  }
-  #settingsButtons button:not(:first-of-type) {
-  }
-  #settingsTextarea {
+}
+#settingsButtons button:not(:first-of-type) {
+}
+#settingsTextarea {
     height:16em;
-  }
+}
 
-  .info {
+.info {
     background:#fee;
     border:1px solid #fcc;
     border-radius:0.5em;
     padding:0.5em;
-  }
-  #info {
+}
+#info {
     display:none;
-  }
-  .closeButtonX {
+}
+.closeButtonX {
     float:right;
     background:#fcc;
     border:1px solid indianred;
@@ -157,79 +176,79 @@
     border-top-left-radius:0;
     border-bottom-right-radius:0;
     color:indianred;
-  }
-  .closeButtonX:hover {
+}
+.closeButtonX:hover {
     background:indianred;
     color:#fff;
-  }
+}
 
-  #combinedBookmarkletContainer {
+#combinedBookmarkletContainer {
     position:relative;
     margin:0.5em;
     width:100%;
     text-align:center;
     margin-top:-1em;
-  }
-  #bookmarkIconImage {
+}
+#bookmarkIconImage {
     margin-left:0.5em;
     width:24px;
     height:24px;
-  }
+}
 
-  #bookmarkletEntryTemplate, #info-restoreSettings, #info-exportSettings, #info-saveSettings {
+#bookmarkletEntryTemplate, #info-restoreSettings, #info-exportSettings, #info-saveSettings {
     display:none;
-  }
-  #bookmarkletName, #settingsTextarea, #bookmarkletEntry, #bookmarkletEntry input {
+}
+#bookmarkletName, #settingsTextarea, #bookmarkletEntry, #bookmarkletEntry input {
     width:100%;
-  }
+}
 
-  #bookmarkletEntry {
+#bookmarkletEntry {
     margin:0.5em 0;
     background:#eee;
     border-collapse:collapse;
-  }
-  #bookmarkletEntry, #bookmarkletEntry td, #bookmarkletEntry input {
+}
+#bookmarkletEntry, #bookmarkletEntry td, #bookmarkletEntry input {
     border:1px solid #ccc;
-  }
-  #bookmarkletEntry tr:hover {
+}
+#bookmarkletEntry tr:hover {
     background:#ddd;
-  }
-  #bookmarkletEntry tr.active {
+}
+#bookmarkletEntry tr.active {
     background:#fee;
-  }
-  #bookmarkletEntry td {
+}
+#bookmarkletEntry td {
     width:100%;
     white-space:nowrap;
     padding:2px 5px;
-  }
-  #bookmarkletEntry td.titleInput {
+}
+#bookmarkletEntry td.titleInput {
     width:35%;
     padding-left:5px;
-  }
-  #bookmarkletEntry td.moveAndDeleteButtons {
+}
+#bookmarkletEntry td.moveAndDeleteButtons {
     padding-right:5px;
-  }
-  button.move {
+}
+button.move {
     font:1.25em/1 monospace;
     display:inline;
     padding:0 2px;
-  }
-  button.move:hover {
+}
+button.move:hover {
     color:#000;
     cursor:pointer;
-  }
+}
 
-  /*
-   * http://mystrd.at/modern-clean-css-sticky-footer/
-   */
-  html {
+/*
+ * http://mystrd.at/modern-clean-css-sticky-footer/
+ */
+html {
     position:relative;
     min-height:100%;
-  }
-  body {
+}
+body {
     margin-bottom:2.5em;
-  }
-  footer {
+}
+footer {
     position:absolute;
     left:0;
     bottom:0;
@@ -237,10 +256,10 @@
     width:100%;
     padding:0.5em 0;
     text-align:center;
-  }
-  /*
-   * ---
-   */
+}
+/*
+ * ---
+ */
 </style>
 </head>
 <body>
@@ -262,12 +281,12 @@
         <td class="titleInput">
           <input type="text" name="title[]" class="title" placeholder="Title"
             onchange="generateBookmarklet();"
-            onkeydown="if(event.keyCode==13) return false;">
+            onkeydown="if (event.keyCode==13) return false;">
         </td>
         <td class="urlInput">
           <input type="text" name="url[]" class="url" placeholder="URL"
             onchange="generateBookmarklet();"
-            onkeydown="if(event.keyCode==13) return false;">
+            onkeydown="if (event.keyCode==13) return false;">
         </td>
         <td class="moveAndDeleteButtons">
           <button class="move" onclick="moveRow(this,'up');">&uarr;</button>
@@ -392,324 +411,321 @@
 </form>
 <!--  -->
 <script>
-  /*jshint laxbreak:true, laxcomma:true */
-
-  /*
-   * Collect bookmarklets from input fields into an array of objects
-   */
-  function getBookmarkletsFromInputs()
-  { "use strict";
-    var bookmarkletEntryTable = document.getElementById('bookmarkletEntry')
-      , bookmarkletInputs = bookmarkletEntryTable.getElementsByTagName('input')
-      , bookmarklets = []
-      , titles = []
-      , urls = []
-      , title
-      , url
-    ;
+/*
+ * Collect bookmarklets from input fields into an array of objects
+ */
+function getBookmarkletsFromInputs() {
+    "use strict";
+    var bookmarkletEntryTable = document.getElementById('bookmarkletEntry'),
+        bookmarkletInputs = bookmarkletEntryTable.getElementsByTagName('input'),
+        bookmarklets = [],
+        titles = [],
+        urls = [],
+        title,
+        url;
     /* Collect Titles and URLs from bookmarklet Entry fields */
-    for(var i = 0; i < bookmarkletInputs.length; i++)
-    {
-      if(bookmarkletInputs[i].className.indexOf('title') !== -1) {
-        titles.push(bookmarkletInputs[i]);
-      }
-      if(bookmarkletInputs[i].className.indexOf('url') !== -1) {
-        urls.push(bookmarkletInputs[i]);
-      }
+    for (var i = 0; i < bookmarkletInputs.length; i++) {
+        if (bookmarkletInputs[i].className.indexOf('title') !== -1) {
+            titles.push(bookmarkletInputs[i]);
+        }
+        if (bookmarkletInputs[i].className.indexOf('url') !== -1) {
+            urls.push(bookmarkletInputs[i]);
+        }
     }
-    for(var j = 0; j < bookmarkletInputs.length; j++)
-    {
-      title = titles[j] ? titles[j].value : '';
-      url = urls[j] ? urls[j].value : '';
-      /* If title and URL are empty, skip */
-      if(!title && !url) {
-        continue;
-      }
-      /* If there's no title, use first 32 chars of URL */
-      if(!title) {
-        title = url.length > 32 ? url.substr(0, 32) + '...' : url;
-      }
-      /*
-       * urlencoded "javascript:" urls break "run" setting,
-       * so decode them. most unencoded bookmarklets have 1+
-       * space inside, decode any without one, and fix unencoded % signs
-       */
-      if(url.match(/^\s*javascript:/i) && !url.match(/[^\s]\s/)) {
-        url = decodeURI(url.replace(/%([^\d]|$)/g, "%25"));
-      }
-      /* Add titles and urls to bookmarklets array */
-      bookmarklets.push({
-        'title': title
-      , 'url': url && !!url ? url : '#'
-      });
+    for (var j = 0; j < bookmarkletInputs.length; j++) {
+        title = titles[j] ? titles[j].value : '';
+        url = urls[j] ? urls[j].value : '';
+        /* If title and URL are empty, skip */
+        if (!title && !url) {
+            continue;
+        }
+        /* If there's no title, use first 32 chars of URL */
+        if (!title) {
+            title = url.length > 32 ? url.substr(0, 32) + '...' : url;
+        }
+        /*
+         * urlencoded "javascript:" urls break "run" setting,
+         * so decode them. most unencoded bookmarklets have 1+
+         * space inside, decode any without one, and fix unencoded % signs
+         */
+        if (url.match(/^\s*javascript:/i) && !url.match(/[^\s]\s/)) {
+            url = decodeURI(url.replace(/%([^\d]|$)/g, "%25"));
+        }
+        /* Add titles and urls to bookmarklets array */
+        bookmarklets.push({
+            'title': title,
+            'url': url && !!url ? url : '#'
+        });
     }
     /* Fix for empty results, put something at least */
-    if(bookmarklets.length < 1) {
-      bookmarklets.push({
-        /* 160 = non-breaking space */
-        'title': String.fromCharCode(160)
-      , 'url': '#'
-      });
+    if (bookmarklets.length < 1) {
+        bookmarklets.push({
+            /* 160 = non-breaking space */
+            'title': String.fromCharCode(160),
+            'url': '#'
+        });
     }
     return bookmarklets;
-  }
+}
 
-  /*
-   * Begin Bookmarklet Combiner
-   */
-  function generateBookmarklet()
-  { "use strict";
+/*
+ * Begin Bookmarklet Combiner
+ */
+function generateBookmarklet() {
+    "use strict";
     /*jshint scripturl:true */
-    // console.log('generateBookmarklet() called.');
-    var bookmarkletLink = '#'
-      , clickActionSetting = document.getElementById('run').checked ? 'run' : 'menu'
-    ;
+    /* console.log('generateBookmarklet() called.'); */
+    var bookmarkletLink = '#',
+        clickActionSetting = document.getElementById('run').checked ? 'run' : 'menu';
     var bookmarklets = getBookmarkletsFromInputs();
     /* Remove any showing bookmarklet menus  */
     var bookmarkletContainer = document.getElementsByClassName('kafeneCombinedBookmarkletContainer');
-    for(var bcI = 0; bcI < bookmarkletContainer.length; bcI++) {
-      try {
-        bookmarkletContainer[bcI].parentNode.removeChild(bookmarkletContainer[bcI]);
-      } catch(err) {}
+    for (var bcI = 0; bcI < bookmarkletContainer.length; bcI++) {
+        try {
+            bookmarkletContainer[bcI].parentNode.removeChild(bookmarkletContainer[bcI]);
+        } catch(err) {}
     }
     /* The meta-bookmarklet that displays bookmarklet menu */
-    if(clickActionSetting === 'menu')
-    {
-      bookmarklets =
-      [ JSON.stringify(bookmarklets)
-      , '"' + document.getElementById('position').value + '"'
-      , document.getElementById('closeOnClickingLink').checked
-      , document.getElementById('closeOnClickingOutside').checked
-      , (new Date()).getTime()
-      ];
-      /* @todo - could use Function.prototype.toString() here? */
-      bookmarkletLink =
-        'javascript:(function(bookmarklets,posopt,ccl,cco,utime)'
-      + '{'
-      + 'var doc=document,bmid="kafeneCombinedBookmarklet-"+utime'
-      +     ',menu=doc.getElementById(bmid)'
-      +     ',cssid="kafeneCombinedBookmarkletStyle-"+utime'
-      +     ',styleel=doc.getElementById(cssid),bmlink'
-      /* Bookmarklet position */
-      +     ',pos={'
-      +         'tl:{left:"10px",top:"10px"},'
-      +         'tr:{right:"10px",top:"10px"},'
-      +         'bl:{left:"10px",bottom:"10px"},'
-      +         'br:{right:"10px",bottom:"10px"}'
-      +     '}'
-      /* Main CSS */
-      +     ',css=".kafeneCombinedBookmarkletContainer{'
-      +         'position:fixed!important;z-index:9001!important;width:250px;'
-      +         'max-height:450px!important;overflow-y:auto!important;'
-      +         'border-radius:3px;display:block!important;visibility:hidden;'
-      +         'background:#fff!important;padding:3px!important;'
-      +         'border:1px solid #b0b0b0!important;text-align:left!important;'
-      +         'box-shadow:2px 2px 3px #777!important;'
-      +         'overflow-x:hidden!important;'
-      +     '}.kafeneCombinedBookmarkletContainer a{display:block!important;width:100%;'
-      +         'border:0!important;background:#fff!important;'
-      +         'margin:0!important;color:#000!important;'
-      +         'padding:4px 0 4px 6px!important;word-spacing:normal!important;'
-      +         'word-spacing:normal!important;'
-      +         'font:normal normal normal 14px/100% '
-      +         '\'Segoe UI\',\'Droid Sans Mono\',Verdana,sans-serif !important;'
-      +         'letter-spacing:normal!important;text-decoration:none!important;'
-      +     '}.kafeneCombinedBookmarkletContainer a:hover{'
-      +         'background:#a0a0a0!important;color:#fff!important;'
-      +         'text-decoration:none!important;'
-      +         'font:normal normal normal 14px/100% '
-      +         '\'Segoe UI\',\'Droid Sans Mono\',Verdana,sans-serif !important;'
-      +         'letter-spacing:normal!important;border:0!important;'
-      +     '}";'
-      /* End Main CSS */
-      /*
-       * When clicking the bookmarklet from browser UI,
-       * show it if it's not showing, hide it if it is.
-      */
-      + 'function hid(){menu.style.visibility="hidden"}'
-      + 'function vis(){menu.style.visibility="visible"}'
-      + 'if(menu){'
-      +     'if(menu.style.visibility=="visible"){hid()}else{vis()}'+'return;'
-      + '}'
-      /* Create bookmarklet + styles */
-      + 'if(!styleel){'
-      +     'css=css.replace(/\\.kafeneCombinedBookmarkletContainer/g,"#"+bmid);'
-      +     'styleel=doc.createElement("style");'
-      +     'styleel.id=cssid;'
-      +     'styleel.appendChild(doc.createTextNode(css));'
-      +     'doc.getElementsByTagName("head")[0].appendChild(styleel);'
-      + '}'
-      + 'menu=doc.createElement("div");'
-      + 'menu.setAttribute("id",bmid);'
-      + 'menu.className="kafeneCombinedBookmarkletContainer";'
-      + 'for(var o=0;o<bookmarklets.length;o++){'
-      +     'bmlink=doc.createElement("a");'
-      +     'bmlink.appendChild(doc.createTextNode(bookmarklets[o].title));'
-      +     'bmlink.setAttribute("href",bookmarklets[o].url);'
-      +     'bmlink.onclick=(function(ev){if(ccl){hid()}});'
-      +     'menu.appendChild(bmlink);'
-      + '}'
-      + 'doc.getElementsByTagName("body")[0].appendChild(menu);'
-      + 'if(pos.hasOwnProperty(posopt)){'
-      +     'for(var j in pos[posopt])'+'menu.style[j]=pos[posopt][j];'
-      + '}else{'
-      +     'if(posopt=="c"){'
-      +         'menu.style.left=Math.round((window.innerWidth-menu.offsetWidth)/2)+"px";'
-      +         'menu.style.top=Math.round((window.innerHeight-menu.offsetHeight)/2)+"px";'
-      +     '}'
-      + '}'
-      + 'if(cco){'
-      +     'var oclick = doc.onclick;'
-      +     'doc.onclick=(function(){'
-      +         'hid();'
-      +         'if(typeof oclick=="function"){oclick()}'
-      +     '});'
-      +     'menu.onclick=(function(i){'
-      +         'i.stopPropagation()'
-      +     '});'
-      + '}'
-      + 'vis();'
-      + '})('+bookmarklets.join(',')+')';
-    /* meta-bookmarklet that runs all bookmarklets at once */
+    if (clickActionSetting === 'menu') {
+        bookmarklets = [
+            JSON.stringify(bookmarklets),
+            '"' + document.getElementById('position').value + '"',
+            document.getElementById('closeOnClickingLink').checked,
+            document.getElementById('closeOnClickingOutside').checked,
+            (new Date()).getTime()
+        ];
+        /* @todo - could use Function.prototype.toString() here? */
+        bookmarkletLink =
+            'javascript:(function(bookmarklets,posopt,ccl,cco,utime)'+
+            '{'+
+            'var doc=document,bmid="kafeneCombinedBookmarklet-"+utime'+
+                ',menu=doc.getElementById(bmid)'+
+                ',cssid="kafeneCombinedBookmarkletStyle-"+utime'+
+                ',styleel=doc.getElementById(cssid),bmlink'+
+          /* Bookmarklet position */
+                ',pos={'+
+                    'tl:{left:"10px",top:"10px"},'+
+                    'tr:{right:"10px",top:"10px"},'+
+                    'bl:{left:"10px",bottom:"10px"},'+
+                    'br:{right:"10px",bottom:"10px"}'+
+                '}'+
+          /* Main CSS */
+                ',css=".kafeneCombinedBookmarkletContainer{'+
+                    'position:fixed!important;z-index:9001!important;width:250px;'+
+                    'max-height:450px!important;overflow-y:auto!important;'+
+                    'border-radius:3px;display:block!important;visibility:hidden;'+
+                    'background:#fff!important;padding:3px!important;'+
+                    'border:1px solid #b0b0b0!important;text-align:left!important;'+
+                    'box-shadow:2px 2px 3px #777!important;'+
+                    'overflow-x:hidden!important;'+
+                '}.kafeneCombinedBookmarkletContainer a{display:block!important;width:100%;'+
+                    'border:0!important;background:#fff!important;'+
+                    'margin:0!important;color:#000!important;'+
+                    'padding:4px 0 4px 6px!important;word-spacing:normal!important;'+
+                    'word-spacing:normal!important;'+
+                    'font:normal normal normal 14px/100% '+
+                    '\'Segoe UI\',\'Droid Sans Mono\',Verdana,sans-serif !important;'+
+                    'letter-spacing:normal!important;text-decoration:none!important;'+
+                '}.kafeneCombinedBookmarkletContainer a:hover{'+
+                    'background:#a0a0a0!important;color:#fff!important;'+
+                    'text-decoration:none!important;'+
+                    'font:normal normal normal 14px/100% '+
+                    '\'Segoe UI\',\'Droid Sans Mono\',Verdana,sans-serif !important;'+
+                    'letter-spacing:normal!important;border:0!important;'+
+                '}";'+
+          /* End Main CSS */
+          /*
+           * When clicking the bookmarklet from browser UI,
+           * show it if it's not showing, hide it if it is.
+          */
+            'function hid(){menu.style.visibility="hidden"}'+
+            'function vis(){menu.style.visibility="visible"}'+
+            'if(menu){'+
+                'if (menu.style.visibility=="visible"){hid()}else{vis()}'+'return;'+
+            '}'+
+          /* Create bookmarklet + styles */
+            'if(!styleel){'+
+                'css=css.replace(/\\.kafeneCombinedBookmarkletContainer/g,"#"+bmid);'+
+                'styleel=doc.createElement("style");'+
+                'styleel.id=cssid;'+
+                'styleel.appendChild(doc.createTextNode(css));'+
+                'doc.getElementsByTagName("head")[0].appendChild(styleel);'+
+            '}'+
+            'menu=doc.createElement("div");'+
+            'menu.setAttribute("id",bmid);'+
+            'menu.className="kafeneCombinedBookmarkletContainer";'+
+            'for(var o=0;o<bookmarklets.length;o++){'+
+                'bmlink=doc.createElement("a");'+
+                'bmlink.appendChild(doc.createTextNode(bookmarklets[o].title));'+
+                'bmlink.setAttribute("href",bookmarklets[o].url);'+
+                'bmlink.onclick=(function(ev){if(ccl){hid()}});'+
+                'menu.appendChild(bmlink);'+
+            '}'+
+            'doc.getElementsByTagName("body")[0].appendChild(menu);'+
+            'if(pos.hasOwnProperty(posopt)){'+
+                'for(var j in pos[posopt])'+'menu.style[j]=pos[posopt][j];'+
+            '}else{'+
+                'if(posopt=="c"){'+
+                    'menu.style.left=Math.round((window.innerWidth-menu.offsetWidth)/2)+"px";'+
+                    'menu.style.top=Math.round((window.innerHeight-menu.offsetHeight)/2)+"px";'+
+                '}'+
+            '}'+
+            'if(cco){'+
+                'var oclick = doc.onclick;'+
+                'doc.onclick=(function(){'+
+                    'hid();'+
+                    'if (typeof oclick=="function"){oclick()}'+
+                '});'+
+                'menu.onclick=(function(i){'+
+                    'i.stopPropagation()'+
+                '});'+
+            '}'+
+            'vis();'+
+            '})('+bookmarklets.join(',')+')';
     }
-    else if(clickActionSetting === 'run')
-    {
-      bookmarkletLink =
-        'javascript:(function(bookmarklets)'
-      + '{'
-      + 'for(var i=0;i<bookmarklets.length;i++){'
-      +     'var code=bookmarklets[i].url;'
-      +     'if(code.indexOf("javascript:")!=-1){'
-      +         'code=code.replace("javascript:","");'
-      +         'eval(code)'
-      +     '}else{'
-      +         'code=code.replace(/^\\s+|\\s+$/g,"");'
-      +         'if(code.length>0){'
-      +             'window.open(code);'
-      +         '}'
-      +     '}'
-      + '}'
-      + '})('+JSON.stringify(bookmarklets)+')';
+    /* meta-bookmarklet that runs all bookmarklets at once */
+    else if (clickActionSetting === 'run') {
+        bookmarkletLink =
+              'javascript:(function(bookmarklets)'+
+              '{'+
+                  'for(var i=0;i<bookmarklets.length;i++){'+
+                      'var code=bookmarklets[i].url;'+
+                      'if(code.indexOf("javascript:")!=-1){'+
+                          'code=code.replace("javascript:","");'+
+                          'eval(code)'+
+                      '}else{'+
+                          'code=code.replace(/^\\s+|\\s+$/g,"");'+
+                          'if(code.length>0){'+
+                              'window.open(code);'+
+                          '}'+
+                      '}'+
+                  '}'+
+              '})('+JSON.stringify(bookmarklets)+')';
     }
     /* Set result link to the generated bookmarklet */
     document.getElementById('combinedBookmarkletLink').href = encodeURI(bookmarkletLink);
-  }
+}
 
-  /* Toggle showing info when an info link is clicked */
-  function showInfo(x)
-  { "use strict";
+/*
+ * Toggle showing info when an info link is clicked
+ */
+function showInfo(x) {
+    "use strict";
     try {
-      var infoItem = document.getElementById('info-' + x)
-        , infoContainer = document.getElementById('info')
-      ;
+      var infoItem = document.getElementById('info-' + x),
+          infoContainer = document.getElementById('info');
       var infoChildren = infoContainer.children;
-      if(infoChildren.length) {
-        for(var i = 0; i < infoChildren.length; i++) {
-          infoChildren[i].style.display = 'none';
-        }
+      if (infoChildren.length) {
+          for (var i = 0; i < infoChildren.length; i++) {
+              infoChildren[i].style.display = 'none';
+          }
       }
       infoContainer.style.display = 'block';
       infoItem.style.display = 'block';
     } catch(err) {}
-  }
+}
 
-  /*
-   * InsertAfter function
-   * http://www.dzone.com/snippets/insertafter-insertbefore-and
-   */
-  function insertAfter(newNode, refNode, node)
-  { "use strict";
+/*
+ * InsertAfter function
+ * http://www.dzone.com/snippets/insertafter-insertbefore-and
+ */
+function insertAfter(newNode, refNode, node) {
+    "use strict";
     try {
-      if(typeof(refNode.nextSibling) === 'object') {
-        newNode.insertBefore(refNode, node.nextSibling);
-      } else {
-        newNode.appendChild(refNode);
-      }
+        if (typeof(refNode.nextSibling) === 'object') {
+            newNode.insertBefore(refNode, node.nextSibling);
+        } else {
+            newNode.appendChild(refNode);
+        }
     } catch(err) {}
-  }
+}
 
-  /*
-   * Get an element's nearest containing tag of a certain tag name
-   * (if it has one)
-   */
-  function getParentTag(tag, el)
-  { "use strict";
+/*
+ * Get an element's nearest containing tag of a certain tag name
+ * (if it has one)
+ */
+function getParentTag(tag, el) {
+    "use strict";
     var test = el.parentNode;
-    while(test.parentNode && (test.nodeName.toLowerCase() !== tag)) {
+    while (test.parentNode && (test.nodeName.toLowerCase() !== tag)) {
       test = test.parentNode;
     }
     return test.nodeName.toLowerCase() === tag ? test : '';
-  }
+}
 
-  /* Update the bookmarklet's title. */
-  function updateTitle()
-  { "use strict";
+/*
+ * Update the bookmarklet's title.
+ */
+function updateTitle() {
+    "use strict";
     /* console.log('updateTitle() called.'); */
-    document.getElementById('bookmarkletTitle').innerText
-    = document.getElementById('combinedBookmarkletLink').title
-    =   document.getElementById('bookmarkletName').value
-      ? document.getElementById('bookmarkletName').value
-      : 'Combined Bookmarklet';
-  }
+    document.getElementById('bookmarkletTitle').innerText =
+    document.getElementById('combinedBookmarkletLink').title =
+    document.getElementById('bookmarkletName').value ?
+        document.getElementById('bookmarkletName').value :
+        'Combined Bookmarklet';
+}
 
-  /* Add a bookmarklet input row */
-  function addRow(ev, howMany)
-  { "use strict";
-    if(ev && ev.preventDefault) {
-      ev.preventDefault();
+/*
+ * Add a bookmarklet input row
+ */
+function addRow(ev, howMany) {
+    "use strict";
+    if (ev && ev.preventDefault) {
+        ev.preventDefault();
     }
-    var rta = document.getElementsByName('rowsToAdd')[0]
-      , tpl = document.getElementById('bookmarkletEntryTemplate');
-    if(rta.value && !howMany) {
-      howMany = rta.value; 
+    var rta = document.getElementsByName('rowsToAdd')[0],
+        tpl = document.getElementById('bookmarkletEntryTemplate');
+    if (rta.value && !howMany) {
+        howMany = rta.value; 
     }
     tpl = tpl.getElementsByClassName('bookmarklet')[0];
-    for(var i = 0; i < howMany; i++) {
-      document.getElementById('bookmarkletEntry').appendChild(tpl.cloneNode(true));
+    for (var i = 0; i < howMany; i++) {
+        document.getElementById('bookmarkletEntry').appendChild(tpl.cloneNode(true));
     }
-  }
+}
 
-  /*
-   * Restore saved settings
-   */
-  function restoreSettings(ev)
-  { "use strict";
-    // console.log('restoreSettings() called.');
-    if(ev && ev.preventDefault) {
-      ev.preventDefault();
+/*
+ * Restore saved settings
+ */
+function restoreSettings(ev) {
+    "use strict";
+    /* console.log('restoreSettings() called.'); */
+    if (ev && ev.preventDefault) {
+        ev.preventDefault();
     }
-    var combinedJSON = document.getElementById('settingsTextarea').value.toString().trim()
-      , settings
-      , bookmarklets
-      , combined;
-    if(!combinedJSON) {
-      return false;
+    var combinedJSON = document.getElementById('settingsTextarea').value.toString().trim(),
+        settings,
+        bookmarklets,
+        combined;
+    if (!combinedJSON) {
+        return false;
     }
     try {
-      combined = JSON.parse(combinedJSON);
+        combined = JSON.parse(combinedJSON);
     } catch(err) {
-      window.alert("Invalid settings format! JSON.parse() failed.");
-      return false;
+        window.alert("Invalid settings format! JSON.parse() failed.");
+        return false;
     }
     settings = combined.settings;
     bookmarklets = combined.bookmarklets;
     /* Restore setting for run vs show menu */
-    if(settings.onclick === 'run') {
-      document.getElementById('run').checked = true;
+    if (settings.onclick === 'run') {
+        document.getElementById('run').checked = true;
     } else {
-      document.getElementById('menu').checked = true;
+        document.getElementById('menu').checked = true;
     }
     /* Restore setting for Menu position (position element id = saved position) */
     try {
-      document.getElementById(settings.position).selected = true;
+        document.getElementById(settings.position).selected = true;
     } catch(err) {}
     /* Restore setting for closing on clicking an item */
     try {
-      document.getElementById('closeOnClickingLink').checked = settings.closeOnClickingLink;
+        document.getElementById('closeOnClickingLink').checked = settings.closeOnClickingLink;
     } catch(err) {}
     /* Restore setting for closing an item when clicking outside menu */
     try {
-      document.getElementById('closeOnClickingOutside').checked = settings.closeOnClickingOutside;
+        document.getElementById('closeOnClickingOutside').checked = settings.closeOnClickingOutside;
     } catch(err) {}
     /* Restore name */
     document.getElementById('bookmarkletName').value = settings.name || '';
@@ -720,383 +736,371 @@
     document.getElementById('bookmarkletEntry').innerHTML = '';
     addRow(null, bookmarklets.length);
     var bookmarkletEntryTable = document.getElementById('bookmarkletEntry');
-    var entryUrls = bookmarkletEntryTable.getElementsByClassName('url')
-      , entryTitles = bookmarkletEntryTable.getElementsByClassName('title')
-    ;
+    var entryUrls = bookmarkletEntryTable.getElementsByClassName('url'),
+        entryTitles = bookmarkletEntryTable.getElementsByClassName('title');
     try {
-      for(var i = 0; i < bookmarklets.length; i++) {
-        entryTitles[i].value = bookmarklets[i].title || '';
-        entryUrls[i].value = bookmarklets[i].url || '';
-      }
+        for (var i = 0; i < bookmarklets.length; i++) {
+            entryTitles[i].value = bookmarklets[i].title || '';
+            entryUrls[i].value = bookmarklets[i].url || '';
+        }
     } catch(err) {}
     /* Update the title and generate a new bookmarklet. */
     updateTitle();
     generateBookmarklet();
     /* Scroll to bottom of page, so settings box remains visible */
     try {
-      window.scrollTo(0, document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight);
     } catch(err) {}
-  }
+}
 
-  /*
-   * Exports the current bookmarklets into the settings textarea
-   */
-  function exportSettings(ev)
-  { "use strict";
-    // console.log('exportSettings() called.');
-    if(ev && ev.preventDefault) {
-      ev.preventDefault();
+/*
+ * Exports the current bookmarklets into the settings textarea
+ */
+function exportSettings(ev) {
+    "use strict";
+    /* console.log('exportSettings() called.'); */
+    if (ev && ev.preventDefault) {
+        ev.preventDefault();
     }
-    var exports = {}
-      , bookmarkletEntryTable = document.getElementById('bookmarkletEntry')
-      , title
-      , url
-      , j = 0
-      , settingsTextarea = document.getElementById('settingsTextarea')
-      , exportButton = document.getElementById('exportSettingsButton')
-      , urls = bookmarkletEntryTable.getElementsByClassName('url')
-      , titles = bookmarkletEntryTable.getElementsByClassName('title')
-    ;
+    var exports = {},
+        bookmarkletEntryTable = document.getElementById('bookmarkletEntry'),
+        title,
+        url,
+        j = 0,
+        settingsTextarea = document.getElementById('settingsTextarea'),
+        exportButton = document.getElementById('exportSettingsButton'),
+        urls = bookmarkletEntryTable.getElementsByClassName('url'),
+        titles = bookmarkletEntryTable.getElementsByClassName('title');
     exports.bookmarklets = [];
     /* Get all URLs and Titles into exports.bookmarklets[] */
-    for(var i = 0; i < urls.length; i++) {
-      try {
-        exports.bookmarklets[i] = {};
-        title = titles[i].value;
-        url = urls[i].value;
-        /* Don't export empty items */
-        if(title.trim() === '' && url.trim() === '') {
-          continue;
-        } else {
-          exports.bookmarklets[i].title = title.trim();
-          exports.bookmarklets[i].url = url.trim();
-          j++;
-        }
-      } catch(err) {}
+    for (var i = 0; i < urls.length; i++) {
+        try {
+            exports.bookmarklets[i] = {};
+            title = titles[i].value;
+            url = urls[i].value;
+            /* Don't export empty items */
+            if (title.trim() === '' && url.trim() === '') {
+                continue;
+            } else {
+                exports.bookmarklets[i].title = title.trim();
+                exports.bookmarklets[i].url = url.trim();
+                j++;
+            }
+        } catch(err) {}
     }
     /* Flash a warning if there was nothing to export */
-    if(j === 0) {
-      exportButton.innerText = 'Nothing to export!';
-      setTimeout(function(){
-        exportButton.innerText = 'Export Settings';
-      }, 1500);
-      return;
+    if (j === 0) {
+        exportButton.innerText = 'Nothing to export!';
+        setTimeout(function() {
+            exportButton.innerText = 'Export Settings';
+        }, 1500);
+        return;
     } else {
-      /* Clear settings textarea */
-        settingsTextarea.innerHTML
-      = settingsTextarea.innerTetxt
-      = settingsTextarea.textContent
-      = '';
-      /* Add the current page settings (see serializeSettings()) */
-      exports.settings = serializeSettings();
-      // console.log(exports);
-      /* insert into the settings textarea */
-        settingsTextarea.innerHTML
-      = settingsTextarea.innerText
-      = settingsTextarea.textContent
-      = JSON.stringify(exports).trim();
-      /* Select the settings text (presumably to copy/paste) */
-      settingsTextarea.select();
+        /* Clear settings textarea */
+        settingsTextarea.innerHTML =
+        settingsTextarea.innerTetxt =
+        settingsTextarea.textContent = '';
+        /* Add the current page settings (see serializeSettings()) */
+        exports.settings = serializeSettings();
+        /* console.log(exports); */
+        /* insert into the settings textarea */
+          settingsTextarea.innerHTML =
+          settingsTextarea.innerText =
+          settingsTextarea.textContent =
+          JSON.stringify(exports).trim();
+        /* Select the settings text (presumably to copy/paste) */
+        settingsTextarea.select();
     }
     generateBookmarklet();
-  }
+}
 
-  /*
-   * Save the current settings
-   * saves the state of the page to the browser's localStorage
-   */
-  function saveSettings(ev)
-  { "use strict";
-    // console.log('saveSettings() called.');
-    if(ev && ev.preventDefault) {
-      ev.preventDefault();
+/*
+ * Save the current settings
+ * saves the state of the page to the browser's localStorage
+ */
+function saveSettings(ev) {
+    "use strict";
+    /* console.log('saveSettings() called.'); */
+    if (ev && ev.preventDefault) {
+        ev.preventDefault();
     }
-    var saveButton = document.getElementById('saveSettingsButton')
-      , val = document.getElementById('settingsTextarea').innerText
-           || document.getElementById('settingsTextarea').innerHTML
-    ;
-    /*
-     * Flash a "settings saved" message in the save button
-     * or if the settings field was empty, warn that nothing was there
-     */
-    if(val !== '' && val !== null) {
-      try {
-        localStorage.setItem('kafeneBookmarkletCombinerSettings', val);
-        saveButton.innerText = 'Settings saved!';
-        setTimeout(function(){
-          saveButton.innerText = 'Save Settings';
-        }, 1500);
-      } catch(err) {}
+    var saveButton = document.getElementById('saveSettingsButton'),
+        val = document.getElementById('settingsTextarea').innerText ||
+              document.getElementById('settingsTextarea').innerHTML;
+    /* Flash a "settings saved" message in the save button
+     * or if the settings field was empty, warn that nothing was there */
+    if (val !== '' && val !== null) {
+        try {
+            localStorage.setItem('kafeneBookmarkletCombinerSettings', val);
+            saveButton.innerText = 'Settings saved!';
+            setTimeout(function() {
+                saveButton.innerText = 'Save Settings';
+            }, 1500);
+        } catch(err) {}
     } else {
-      saveButton.innerText = 'Nothing to save!';
-      setTimeout(function(){
-        saveButton.innerText = 'Save Settings';
-      }, 1500);
+        saveButton.innerText = 'Nothing to save!';
+        setTimeout(function() {
+            saveButton.innerText = 'Save Settings';
+        }, 1500);
       return;
     }
     /* Regenerate the bookmarklet */
     generateBookmarklet();
-  }
+}
 
-  /*
-   * Serialize current settings into an object.
-   */
-  function serializeSettings()
-  { "use strict";
-    // console.log('serializeSettings() called.');
-    var settings = {}
-      , pos = 'position';
-    if(document.getElementById('menu').checked) {
-      settings.onclick = "menu";
-      settings.position = document.getElementById(pos).value;
+/*
+ * Serialize current settings into an object.
+ */
+function serializeSettings() {
+    "use strict";
+    /* console.log('serializeSettings() called.'); */
+    var settings = {},
+        pos = 'position';
+    if (document.getElementById('menu').checked) {
+        settings.onclick = "menu";
+        settings.position = document.getElementById(pos).value;
     } else {
-      settings.onclick = "run";
+        settings.onclick = "run";
     }
     try {
-      settings.closeOnClickingLink = document.getElementById('closeOnClickingLink').checked;
+        settings.closeOnClickingLink = document.getElementById('closeOnClickingLink').checked;
     } catch(err) {}
     try {
-      settings.closeOnClickingOutside = document.getElementById('closeOnClickingOutside').checked;
+        settings.closeOnClickingOutside = document.getElementById('closeOnClickingOutside').checked;
     } catch(err) {}
-    if(!!document.getElementById('bookmarkletName').value) {
-      settings.name = document.getElementById('bookmarkletName').value;
+    if (!!document.getElementById('bookmarkletName').value) {
+        settings.name = document.getElementById('bookmarkletName').value;
     }
     return settings;
-  }
+}
 
-  /*
-   * Remove settings from localStorage
-   */
-  function removeLocalSettings(ev)
-  { "use strict";
-    // console.log('removeLocalSettings() called.');
-    if(ev && ev.preventDefault) {
-      ev.preventDefault();
+/*
+ * Remove settings from localStorage
+ */
+function removeLocalSettings(ev) {
+    "use strict";
+    /* console.log('removeLocalSettings() called.'); */
+    if (ev && ev.preventDefault) {
+        ev.preventDefault();
     }
     var settings = document.getElementById('settingsTextarea');
     /* Confirm dialog if the settings textarea is not empty */
-    if(settings.innerText.trim() === '' || window.confirm('OK?')) {
-      localStorage.removeItem('kafeneBookmarkletCombinerSettings');
+    if (settings.innerText.trim() === '' || window.confirm('OK?')) {
+        localStorage.removeItem('kafeneBookmarkletCombinerSettings');
     } else {
-      return;
+        return;
     }
-  }
+}
 
-  /*
-   * Remove a row from the bookmarklet inputs
-   */
-  function deleteRow(row)
-  { "use strict";
+/*
+ * Remove a row from the bookmarklet inputs
+ */
+function deleteRow(row) {
+    "use strict";
     row = getParentTag('tr', row);
-    if(!window.confirm('Are you sure you want to remove this row?')) {
-      return;
+    if (!window.confirm('Are you sure you want to remove this row?')) {
+        return;
     }
     try {
-      row.parentElement.removeChild(row);
+        row.parentElement.removeChild(row);
     } catch(err) {}
     /* Regenerate the bookmarklet */
     generateBookmarklet();
-  }
+}
 
-  /*
-   * Remove "active" class from all rows that it's set on
-   */
-  function deactivateRows()
-  { "use strict";
+/*
+ * Remove "active" class from all rows that it's set on
+ */
+function deactivateRows() {
+    "use strict";
     var bookmarkletEntryTable = document.getElementById('bookmarkletEntry');
     var rows = bookmarkletEntryTable.getElementsByTagName('tr');
-    if(rows.length) {
-      for(var i = 0; i < rows.length; i++) {
-        rows[i].className = rows[i].className.replace(' active', '');
-      }
+    if (rows.length) {
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].className = rows[i].className.replace(' active', '');
+        }
     }
-  }
+}
 
-  /*
-   * Move a table row in direction `dir` ("up"/true or it assumes down)
-   */
-  function moveRow(rowToMove, dir)
-  { "use strict";
-    var up = (dir === 'up' || dir === true) ? true : false
-      , row = getParentTag('tr', rowToMove)
-    ;
-    var node = row.cloneNode(true)
-      , parent = row.parentElement
-      , buttonIndex = up ? 0 : 1
-      , sibling = up ? row.previousElementSibling : row.nextElementSibling
-    ;
+/*
+ * Move a table row in direction `dir` ("up"/true or it assumes down)
+ */
+function moveRow(rowToMove, dir) {
+    "use strict";
+    var up = (dir === 'up' || dir === true) ? true : false,
+        row = getParentTag('tr', rowToMove);
+    var node = row.cloneNode(true),
+        parent = row.parentElement,
+        buttonIndex = up ? 0 : 1,
+        sibling = up ? row.previousElementSibling : row.nextElementSibling;
     /* Clear "active" class from active rows */
     deactivateRows();
     /* Set "active" class on clicked row, for one second to help visual tracking */
     node.className = node.className.replace(' active', '') + ' active';
-    setTimeout(function(){
-      node.className = node.className.replace(' active','');
+    setTimeout(function() {
+        node.className = node.className.replace(' active','');
     }, 1000);
     /* If we're going up and there's a row before it, insert it before */
-    if(up && typeof(sibling) === 'object') {
-      parent.insertBefore(node, sibling);
-      parent.removeChild(row);
+    if (up && typeof(sibling) === 'object') {
+        parent.insertBefore(node, sibling);
+        parent.removeChild(row);
     }
     /* Otherwise (still if going up), ... @todo */
-    else if(up) {
-      parent.removeChild(row);
-      insertAfter(sibling, row, parent.firstElementChild);
+    else if (up) {
+        parent.removeChild(row);
+        insertAfter(sibling, row, parent.firstElementChild);
     }
     /* Similar to above but for going down */
-    if(!up && sibling !== null) {
-      insertAfter(parent, node, sibling);
-      parent.removeChild(row);
+    if (!up && sibling !== null) {
+        insertAfter(parent, node, sibling);
+        parent.removeChild(row);
     }
-    else if(!up) {
-      parent.removeChild(row);
-      parent.insertBefore(node, parent.firstElementChild);
+    else if (!up) {
+        parent.removeChild(row);
+        parent.insertBefore(node, parent.firstElementChild);
     }
-    /*
-     * Focus the row's up button so you can press Return repeatedly to move up
+    /* Focus the row's up button so you can press Return repeatedly to move up
      * This also seems to have the benefit of keeping the window scrolling
-     * if the row would otherwise go above/below the viewport
-     */
+     * if the row would otherwise go above/below the viewport */
     try {
-      node.getElementsByTagName('button')[buttonIndex].focus();
+        node.getElementsByTagName('button')[buttonIndex].focus();
     } catch(err) {}
     /* Regenerate the bookmarklet with the links reordered */
     generateBookmarklet();
-  }
+}
 
-  /*
-   * Initial loading and set up listeners
-   * . Many listeners to regenerate the bookmarklet when a setting is changed.
-   */
-  window.addEventListener('load', function()
-  { "use strict";
+/*
+ * Initial loading and set up listeners. Many listeners
+ * to regenerate the bookmarklet when a setting is changed.
+ */
+window.addEventListener('load', function() {
+    "use strict";
     /* */
-    document.getElementById('position').addEventListener('change', function(){
-      generateBookmarklet();
+    document.getElementById('position').addEventListener('change', function() {
+        generateBookmarklet();
     });
     /* If menu position is changed, make sure the "show menu" setting is selected */
     /* @todo - should this event be "select" instead? */
-    document.getElementById('position').addEventListener('click', function(){
-      document.getElementById('menu').checked = true;
+    document.getElementById('position').addEventListener('click', function() {
+        document.getElementById('menu').checked = true;
     });
     /* */
-    document.getElementById('run').addEventListener('change', function(){
-      generateBookmarklet();
+    document.getElementById('run').addEventListener('change', function() {
+        generateBookmarklet();
     });
     /* */
-    document.getElementById('menu').addEventListener('change', function(){
-      generateBookmarklet();
+    document.getElementById('menu').addEventListener('change', function() {
+        generateBookmarklet();
     });
     /* */
-    document.getElementById('closeOnClickingLink').addEventListener('change', function(){
-      generateBookmarklet();
+    document.getElementById('closeOnClickingLink').addEventListener('change', function() {
+        generateBookmarklet();
     });
     /* */
-    document.getElementById('closeOnClickingOutside').addEventListener('change', function(){
-      generateBookmarklet();
+    document.getElementById('closeOnClickingOutside').addEventListener('change', function() {
+        generateBookmarklet();
     });
     /* Update the title of the bookmarklet when name is changed */
-    document.getElementById('bookmarkletName').addEventListener('change', function(){
-      updateTitle();
+    document.getElementById('bookmarkletName').addEventListener('change', function() {
+        updateTitle();
     });
     /* For some reason pressing enter here was moving rows up/down */
-    document.getElementById('bookmarkletName').addEventListener('keyDown', function(ev){
-      if(ev && ev.keyCode === 13 && ev.preventDefault) {
-        ev.preventDefault();
-      }
+    document.getElementById('bookmarkletName').addEventListener('keyDown', function(ev) {
+        if (ev && ev.keyCode === 13 && ev.preventDefault) {
+            ev.preventDefault();
+        }
     });
     /* Same as Above */
-    document.getElementById('position').addEventListener('keyDown', function(ev){
-      if(ev && ev.keyCode === 13 && ev.preventDefault) {
-        ev.preventDefault();
-      }
+    document.getElementById('position').addEventListener('keyDown', function(ev) {
+        if (ev && ev.keyCode === 13 && ev.preventDefault) {
+            ev.preventDefault();
+        }
     });
     /* Same as Above */
-    document.getElementById('rowsToAdd').addEventListener('keyDown', function(ev){
-      if(ev && ev.keyCode === 13 && ev.preventDefault) {
-        ev.preventDefault();
-      }
+    document.getElementById('rowsToAdd').addEventListener('keyDown', function(ev) {
+        if (ev && ev.keyCode === 13 && ev.preventDefault) {
+            ev.preventDefault();
+        }
     });
     /* Add an input row when the add button is clicked */
-    document.getElementById('addSomeRows').addEventListener('click', function(ev){
-      addRow(ev);
+    document.getElementById('addSomeRows').addEventListener('click', function(ev) {
+        addRow(ev);
     });
     /* */
-    document.getElementById('exportSettingsButton').addEventListener('click', function(ev){
-      exportSettings(ev);
+    document.getElementById('exportSettingsButton').addEventListener('click', function(ev) {
+        exportSettings(ev);
     });
     /* */
-    document.getElementById('restoreSettingsButton').addEventListener('click', function(ev){
-      restoreSettings(ev);
+    document.getElementById('restoreSettingsButton').addEventListener('click', function(ev) {
+        restoreSettings(ev);
     });
     /* */
-    document.getElementById('saveSettingsButton').addEventListener('click', function(ev){
-      saveSettings(ev);
+    document.getElementById('saveSettingsButton').addEventListener('click', function(ev) {
+        saveSettings(ev);
     });
     /* */
-    document.getElementById('removeLocalSettingsButton').addEventListener('click', function(ev){
-      removeLocalSettings(ev);
+    document.getElementById('removeLocalSettingsButton').addEventListener('click', function(ev) {
+        removeLocalSettings(ev);
     });
     /* */
-    document.getElementById('restoreSettingsInfoLink').addEventListener('click', function(){
-      showInfo('restoreSettings');
+    document.getElementById('restoreSettingsInfoLink').addEventListener('click', function() {
+        showInfo('restoreSettings');
     });
     /* */
-    document.getElementById('saveSettingsInfoLink').addEventListener('click', function(){
-      showInfo('saveSettings');
+    document.getElementById('saveSettingsInfoLink').addEventListener('click', function() {
+        showInfo('saveSettings');
     });
     /* */
-    document.getElementById('exportSettingsInfoLink').addEventListener('click', function(){
-      showInfo('exportSettings');
+    document.getElementById('exportSettingsInfoLink').addEventListener('click', function() {
+        showInfo('exportSettings');
     });
     /* This is a dummy I put in to make jshint happy. */
     var jsHintStopWarningMe = false;
-    if(jsHintStopWarningMe) {
-      deleteRow();
-      moveRow();
+    if (jsHintStopWarningMe) {
+        deleteRow();
+        moveRow();
     }
     /*
      * Below is Initial setup performed once on load
      */
     /* Only show the save buttons to browsers that support localStorage */
-    document.getElementById('localStorageOnly').style.display = window.localStorage
-      ? 'inline'
-      : 'none';
+    document.getElementById('localStorageOnly').style.display = window.localStorage ? 'inline' : 'none';
     /* When clicking on a close button (used in info area), hide info area */
     var closeButtons = document.getElementsByClassName('closeButtonX');
-    var closeInfoBox = function(ev){
-      if(ev && ev.preventDefault) {
-        ev.preventDefault();
-      }
-      document.getElementById('info').style.display = 'none';
+    var closeInfoBox = function(ev) {
+        if (ev && ev.preventDefault) {
+            ev.preventDefault();
+        }
+        document.getElementById('info').style.display = 'none';
     };
-    for(var cbI = 0; cbI < closeButtons.length; cbI++) {
-      closeButtons[cbI].onclick = closeInfoBox;
+    for (var cbI = 0; cbI < closeButtons.length; cbI++) {
+        closeButtons[cbI].onclick = closeInfoBox;
     }
     /* Base64-encoded Bookmark Icon Image (shown in bookmarklet link) */
     document.getElementById('bookmarkIconImage').src =
-       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAQMAA'
-      + 'ADaua+7AAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP/AOW3MEoAAABRSURBVHjaFcmxCcAgFE'
-      + 'XRKxaWjuAorpQyReA7mqMILmBpEXz5KQ487mNLLBOjil5Ey4Lkou/gDf8wFpVN4SVzSF4jswV'
-      + 'mhzkMLne7x5jH6acPX8EmudSRfWIAAAAASUVORK5CYII=';
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYAQMAA'+
+        'ADaua+7AAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP/AOW3MEoAAABRSURBVHjaFcmxCcAgFE'+
+        'XRKxaWjuAorpQyReA7mqMILmBpEXz5KQ487mNLLBOjil5Ey4Lkou/gDf8wFpVN4SVzSF4jswV'+
+        'mhzkMLne7x5jH6acPX8EmudSRfWIAAAAASUVORK5CYII=';
     /* Changes the bookmarklet title from "Loading" to "Combined Bookmarklet" */
     updateTitle();
     /*
      * Gets any settings settings from browser's localStorage
      * and fill them in to the settings textarea
      */
-    var settings = document.getElementById('settingsTextarea')
-      , localSettings = localStorage.getItem('kafeneBookmarkletCombinerSettings');
-    if(localSettings !== null) {
-        settings.innerHTML
-      = settings.innerText
-      = settings.textContent
-      = localStorage.getItem('kafeneBookmarkletCombinerSettings');
+    var settings = document.getElementById('settingsTextarea'),
+        localSettings = localStorage.getItem('kafeneBookmarkletCombinerSettings');
+    if (localSettings !== null) {
+        settings.innerHTML =
+        settings.innerText =
+        settings.textContent =
+        localStorage.getItem('kafeneBookmarkletCombinerSettings');
     }
     /* Initialize 3 input rows */
     addRow(0, 3);
     /* generate bookmarklet (in case settings were loaded) */
     generateBookmarklet();
-  });
+});
 </script>
 <!--  -->
 <footer>
