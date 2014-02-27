@@ -4,6 +4,12 @@ You can use it online: http://kafene.github.com/bookmarklet-combiner/bookmarklet
 
 I've finally pushed my "version 2" today, the code is a lot leaner, runs much faster, and hopefully is less buggy. I removed most of the configurability, it's probably easier for both of us to just edit the CSS for the generated bookmarklet directly and run it off localhost... There is a new format for bookmarklet serialization its just pure json for bookmarklets and nothing else.
 
+Removed configuration:
+
+- Menu position: it's still there in the CSS, as `top:10px;left:10px;`. I wager this is acceptable to most people as default.
+- Setting title: Just drag the link to your bar and rename it, easier than storing the title option along with the bookmarklets themselves.
+- "Open all" behavior on click: I found this somewhat useless, and outside the scope of what I want to make, which is a menu for bookmarklets, not a runner that could be just as easily achieved by concatenating them.
+
 **Features:**
 
 * Use your browsers localStorage to save bookmarklets.
