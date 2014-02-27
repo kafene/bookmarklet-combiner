@@ -50,6 +50,9 @@
 
 <script>
 (function (window, undefined) {
+    /* jshint scripturl: true, strict: true */
+    'use strict';
+
     var document = window.document;
 
     //Generate a combined bookmarklet from one or more bookmarklets entered
@@ -57,8 +60,8 @@
         var bookmarklets = [].map.call(document.querySelectorAll('#bookmarklets .bookmarklet'), function (bookmarklet) {
             var title = String(bookmarklet.querySelector('.title').value).trim();
             var url = String(bookmarklet.querySelector('.url').value).trim();
-            if (!url) {return}
-            if (!title) {title = url}
+            if (!url) { return; }
+            if (!title) { title = url; }
 
             // Detect and decode "javascript:" URLs that are URL-encoded.
             // Fix unencoded percent signs, decode any without a `space`.
@@ -68,7 +71,7 @@
                 url = 'javascript:(function(){window.open("'+url+'")})();';
             }
 
-            if (url) {url = url.replace(/\s+/gm, " ")}
+            if (url) { url = url.replace(/\s+/gm, " "); }
             return {title: title, url: url || '#'};
         }).filter(function (bookmarklet) {
             return (bookmarklet && bookmarklet.title && bookmarklet.url);
@@ -174,11 +177,11 @@
 
     function add_row(title, url) {
         if ('number' === typeof(title)) {
-            while (title-- > 0) {add_row()}
+            while (title-- > 0) { add_row(); }
             return;
         }
 
-        if (title instanceof window.Event) {title = url = ""}
+        if (title instanceof window.Event) { title = url = ""; }
 
         var bookmarklet_row = document.createElement('TR');
         var bookmarklet_title_td = document.createElement('TD');
@@ -243,7 +246,7 @@
                 bookmarklets.forEach(function (b) {
                     add_row(b.title, b.url);
                 });
-                if ((len = 3 - len) > 0) {add_row(len)}
+                if ((length = 3 - length) > 0) { add_row(length); }
                 generate_bookmarklet();
             } else {
                 return false;
@@ -265,7 +268,7 @@
         generate_bookmarklet();
     };
 
-    parse_bookmarklets() || add_row(3);
+    if (!parse_bookmarklets()) { add_row(3); }
     generate_bookmarklet();
 })(window, undefined);
 </script>
